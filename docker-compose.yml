@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  front:
+    build: front
+    volumes:
+      - ./front/www:/var/www/html
+    links:
+      - mailhog
+    ports:
+      - "80:80"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+      
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - db-data-camagru:/var/lib/mysql
+    expose:
+      - 3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+     - PMA_ARBITRARY=1
+     - PMA_HOST=mysql
+    ports:
+     - 8080:80
+    volumes:
+     - /sessions
+
+volumes:
+  db-data-camagru:
